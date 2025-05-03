@@ -4,8 +4,8 @@
   "description": "Phanos API",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "NODE_ENV=production node src/index.js",
+    "dev": "NODE_ENV=development nodemon src/index.js",
     "lint": "eslint --fix src",
     "test": "jest"
   },
@@ -13,7 +13,7 @@
   "author": "Ayush Satyavarpu",
   "repository": {
     "type": "git",
-    "url": "https://github.com/w3cj/express-api-starter.git"
+    "url": "https://github.com/AyushSat/phanos-api#"
   },
   "license": "MIT",
   "dependencies": {
@@ -24,7 +24,8 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.2.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "stripe": "^18.1.0"
   },
   "devDependencies": {
     "eslint": "^8.57.0",

@@ -19,8 +19,6 @@ async function verifyJWT(token) {
   }
 }
 
-const emojis = require('./emojis');
-
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -32,10 +30,32 @@ router.get('/', async (req, res) => {
   const payload = await verifyJWT(token);
 
   res.json({
-    message: "From the backend, welcome " + payload["email"],
+    message: `From the backend, welcome ${payload.email}. ENV: ${process.env.NODE_ENV}${process.env.DEPLOYED_URL ? ` | ${process.env.DEPLOYED_URL}` : ''}`,
   });
 });
 
-router.use('/emojis', emojis);
+router.post('/create-checkout-session', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+  const payload = await verifyJWT(token);
+  if (!payload){
+    return res.status(401).json({error: "Token invalid."}); 
+  }
+  const session = await stripe.checkout.sessions.create({
+    ui_mode: 'embedded',
+    line_items: [
+      {
+        price: 'price_1RKmaQEJNDgJoqWpW9Ji5DOs',
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    return_url: `${YOUR_DOMAIN}/return?session_id={CHECKOUT_SESSION_ID}`,
+  });
+
+  res.send({clientSecret: session.client_secret});
+});
 
 module.exports = router;
