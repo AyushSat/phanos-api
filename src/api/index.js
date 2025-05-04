@@ -1,6 +1,6 @@
 const { CognitoJwtVerifier } = require('aws-jwt-verify');
-
 const express = require('express');
+const stripe = require('stripe')(process.env.STRIPE_SK);
 
 const userPoolId = 'us-east-2_AqjEcBPFO';
 
@@ -51,11 +51,19 @@ router.post('/create-checkout-session', async (req, res) => {
         quantity: 1,
       },
     ],
-    mode: 'payment',
-    return_url: `${YOUR_DOMAIN}/return?session_id={CHECKOUT_SESSION_ID}`,
+    mode: 'subscription',
+    return_url: `${process.env.DEPLOYED_URL}return?session_id={CHECKOUT_SESSION_ID}`,
   });
 
   res.send({clientSecret: session.client_secret});
+});
+
+router.get('/session-status', async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+  res.send({
+    status: session.status,
+    customer_email: session.customer_details.email
+  });
 });
 
 module.exports = router;
