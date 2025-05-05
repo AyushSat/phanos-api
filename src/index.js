@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 // Load environment variables based on NODE_ENV
 const envFile = process.env.NODE_ENV === 'development' ? '.env.development' : '.env';
 
+console.log(envFile);
 // Load the environment variables
 const result = dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 
