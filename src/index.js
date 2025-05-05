@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 
 // Load environment variables based on NODE_ENV
 
-console.log(envFile);
 let result;
 // Load the environment variables
 if(process.env.NODE_ENV === 'development'){
